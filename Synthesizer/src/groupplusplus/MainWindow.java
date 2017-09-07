@@ -57,20 +57,14 @@ public class MainWindow extends PApplet {
     //determine which keys have been pressed
     @Override
     public void keyPressed(){
-        keysPressed=0;
-        out.clearSignals();
-
-        //the keyboard has it's own key mappings and will handle state changes if this key is one tha it is watching
+        //the keyboard has it's own key mappings and will handle state changes if this key is one it is watching
         keyBoard.keyPressed(key);
     }
 
     //determine which keys have been released
     @Override
     public void keyReleased(){
-        keysPressed = 0;
-        out.clearSignals();
-
-        //the keyboard has it's own key mappings and will handle state changes if this key is one tha it is watching
+        //the keyboard has it's own key mappings and will handle state changes if this key is one it is watching
         keyBoard.keyReleased(key);
     }
 
