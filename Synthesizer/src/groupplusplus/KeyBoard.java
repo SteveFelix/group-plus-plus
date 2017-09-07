@@ -1,6 +1,7 @@
 package groupplusplus;
 
 import ddf.minim.AudioOutput;
+import ddf.minim.signals.SineWave;
 import processing.core.PApplet;
 
 import java.awt.*;
@@ -25,6 +26,8 @@ public class KeyBoard {
     private int yPosition;
     private int width;
     private int height;
+    private int keysPressed = 0;
+    private float MAXAMP = 1.0f;
 
     private AudioOutput out;
 
@@ -45,18 +48,47 @@ public class KeyBoard {
     }
 
     public void keyPressed(char key){
+        keysPressed = 0;
+        out.clearSignals();
         for(int i=0;i<keys.length;i++){
             if(Character.toUpperCase(key) == keys[i]){
                 keyStates[i] = true;
-                pressKey(i);
+            }
+            if(keyStates[i]){
+                keysPressed++;
+            }
+        }
+        float amp = MAXAMP;
+        if(keysPressed == 0) amp = MAXAMP;
+        else amp=MAXAMP/keysPressed;
+
+        for(int i=0;i<keys.length;i++){
+            if(keyStates[i]){
+                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
             }
         }
     }
     public void keyReleased(char key){
-        for(int i=0;i<keys.length;i++){
-            if(Character.toUpperCase(key) == keys[i]){
+        keysPressed = 0;
+        out.clearSignals();
+        for(int i=0;i<keys.length;i++)
+        {
+            if(Character.toUpperCase(key) == keys[i])
+            {
                 keyStates[i] = false;
-                releaseKey(i);
+            }
+            if(keyStates[i])
+            {
+                keysPressed++;
+            }
+        }
+        float amp = MAXAMP;
+        if(keysPressed == 0) amp = MAXAMP;
+        else amp=MAXAMP/keysPressed;
+
+        for(int i=0;i<keys.length;i++){
+            if(keyStates[i]){
+                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
             }
         }
     }
@@ -114,22 +146,15 @@ public class KeyBoard {
 
         isInitialized = true;
     }
-    //helper function
-    private void pressKey(int index){
-        draw();
-        out.playNote(tones[index]);
-    }
-    //helper function
-    private void releaseKey(int index){
-        keyStates[index] = false;
-        draw();
-    }
+
     //helper function
     private void shiftOctave(){
         for(int i = 0; i < tones.length; ++i){
             tones[i] =  (float)(referenceTones[i] * Math.pow(2,((octave*11)/12)));
         }
     }
+
+    //private inner class
     private class KeyButton {
         private float xPos;         // horizontal location of keyButton
         private float yPos;         //vertical location of keyButton
