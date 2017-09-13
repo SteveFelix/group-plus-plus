@@ -42,9 +42,10 @@ public class KeyBoard {
     }
 
     public void setOctave(int octave){
-        if(octave >= -1 && octave <= 11)
-        this.octave = octave;
-        shiftOctave();
+        if(octave >= -1 && octave <= 11) {
+            this.octave = octave;
+            shiftOctave();
+        }
     }
 
     public void keyPressed(char key){
